@@ -22,23 +22,9 @@ const userSchema = new Schema ({
     password: {
         type: String,
         required: true
-    },
-    card: {
-        card_number: Number,
-        card_type: String,
-        expiry_month: Date(),
-        expiry_year: Date(),
-        security_code: Number
-    },
-    Booking: {
-        space_id: Number,
-        check_in: Date(),
-        check_out: Date(),
-        booking_time: String,
-        booking_reference_no: Number,
-        booking_status: String,
-        total_price: Number,
-        payment_status: String
     }
 })
-module.exports = mongoose.model("User", userSchema);
+
+const User = mongoose.model('User', userSchema);
+export default User;
+// module.exports = mongoose.model("User", userSchema);

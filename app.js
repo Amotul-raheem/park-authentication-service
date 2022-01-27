@@ -1,9 +1,8 @@
-// import dotenv from 'dotenv';
+
 import express from "express";
 import bodyParser from "body-parser";
-import mongoose from "mongoose";
 import {mongodbConnection} from "./db.js"
-
+import {router} from "./routes/auth.js";
 
 
 const app = express();
@@ -15,14 +14,9 @@ const PORT = process.env.PORT || 5000
 
 mongodbConnection();
 
+app.use("/users", router);
 
-app.post("/signup", (req, res) => {
-    console.log(MONGODB_CONNECTION_URL)
-    const {first_name, last_name, username, password, email} = req.body;
-    console.log(first_name, last_name, username, password, email);
 
-    res.send("hello World")
-});
 
 app.listen(5000, (req, res) => {
     console.log(`server is running on port ${PORT}`)
