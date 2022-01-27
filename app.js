@@ -31,8 +31,8 @@ mongoose.connect(CONNECTION_URL, {useNewUrlParser: true, useUnifiedTopology: tru
 // });
 
 app.post("/signup", (req,res) => {
-    const{password,email} = req.body;
-    console.log(password,email);
+    const{first_name,last_name,username,password,email} = req.body;
+    console.log(first_name,last_name,username,password,email);
 
     res.send("hello World")
 });
