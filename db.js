@@ -5,11 +5,12 @@ import dotenv from "dotenv";
 dotenv.config()
 
 
-const mongodbConnection = () => {
+const mongodbConnection= (uri, callback) => {
+
     try {
-        mongoose.connect(process.env.DB , {
-            useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true
-        }, () => console.log("Mongodb is up and running:"));
+        mongoose.connect(process.env.MONGODB_URI, {
+            useNewUrlParser: true, useUnifiedTopology: true
+        });
     } catch (error) {
         console.log(error.message)
     }
