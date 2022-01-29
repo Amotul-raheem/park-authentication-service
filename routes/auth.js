@@ -2,7 +2,6 @@ import express from "express"
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
-
 import joi from "joi";
 
 
@@ -38,7 +37,7 @@ authRouter.post("/signup", async (req, res) => {
         if (error) {
             res.status(400).send(error.details[0].message);
         } else {
-            const saveUser = await user.save();
+            const savedUser = await user.save();
             res.status(200).send("user created")
         }
     } catch (error) {
