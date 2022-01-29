@@ -22,6 +22,23 @@ const userSchema = new Schema ({
     password: {
         type: String,
         required: true
+    },
+    card: {
+       card_number: {
+           type: Number,
+       },
+       card_type: {
+           type: String,
+        },
+        expiry_month: {
+           type: Date,
+        },
+        expiry_year: {
+           type: Date,
+        },
+        security_code: {
+           type: Number,
+        }
     }
 })
 

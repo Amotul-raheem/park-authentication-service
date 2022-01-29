@@ -6,7 +6,7 @@ import User from "../models/User.js";
 import joi from "joi";
 
 
-const router = express.Router();
+const authRouter = express.Router();
 
 const registerSchema = joi.object({
     first_name: joi.string().min(3).required(),
@@ -16,13 +16,13 @@ const registerSchema = joi.object({
     password: joi.string().min(6).required()
 });
 
-router.post("/signup", async (req,res) => {
+authRouter.post("/signup", async (req, res) => {
     const emailExist = await User.findOne({email: req.body.email});
     if (emailExist) {
         res.status(400).send("Email already exists.");
         return;
     }
-    const salt = await  bcrypt.genSalt(10);
+    const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(req.body.password, salt);
 
     const user = new User({
@@ -33,16 +33,16 @@ router.post("/signup", async (req,res) => {
         password: hashedPassword
     });
 
-    try{
-        const { error } = await registerSchema.validateAsync(req.body);
-        if (error){
+    try {
+        const {error} = await registerSchema.validateAsync(req.body);
+        if (error) {
             res.status(400).send(error.details[0].message);
-        }else {
+        } else {
             const saveUser = await user.save();
             res.status(200).send("user created")
         }
-    }catch (error){
+    } catch (error) {
         res.status(500).send(error);
     }
 });
-export { router }
+export {authRouter}
