@@ -1,19 +1,14 @@
 import mongoose from "mongoose";
-// import {MONGODB_CONNECTION_URL} from "./config/db.config.js"
 import dotenv from "dotenv";
 
 dotenv.config()
 
 
-const mongodbConnection= (uri, callback) => {
-
+const mongodbConnection = ( () => {
     try {
-        mongoose.connect(process.env.MONGODB_URI, {
-            useNewUrlParser: true, useUnifiedTopology: true
-        });
+        mongoose.connect(process.env.MONGODB_URL,() => console.log("connected to Data base successfully"));
     } catch (error) {
         console.log(error.message)
     }
-}
-
+})
 export {mongodbConnection};
