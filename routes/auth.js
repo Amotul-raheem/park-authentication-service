@@ -44,4 +44,32 @@ authRouter.post("/signup", async (req, res) => {
         res.status(500).send(error);
     }
 });
+
+// Login Route
+
+const loginSchema = joi.object({
+    username: joi.string().min(6).required(),
+    email: joi.string().min(3).required().email(),
+    password: joi.string().min(6).required()
+});
+
+authRouter.post("/signIn", async (req,res)=> {
+    const user = await User.findOne({email: req.body.email});
+    if (!user) return res.status(400).send("incorrect Email");
+
+    const validPassword = await bcrypt.compare(req.body.password, user.password);
+    if (!validPassword) return  res.status(400).send("Incorrect password");
+
+    try{
+        const {error} = await  loginSchema.validateAsync(req.body);
+        if (error) return res.status(400).send(error.details[0].message);
+        else {
+            const token = jwt.sign({_id: user._id}, process.env.TOKEN_STRING);
+            res.header("auth-token", token).send(token);
+        }
+    } catch (error) {
+        res.status(500).send(error);
+    }
+});
+
 export {authRouter}
