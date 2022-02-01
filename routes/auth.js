@@ -16,34 +16,34 @@ const signUpValidator = joi.object({
 });
 
 authRouter.post("/sign-up", async (req, res) => {
-    const emailExist = await User.findOne({email: req.body.email});
-    if (emailExist) {
-        res.status(400).send("Email already exists.");
-        return;
+    const {error} = await signUpValidator.validateAsync(req.body);
+    if (error) {
+        res.status(400).send(error.details[0].message)
     }
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(req.body.password, salt);
 
-    const user = new User({
-        first_name: req.body.first_name,
-        last_name: req.body.last_name,
-        username: req.body.username,
-        email: req.body.email,
-        password: hashedPassword
-    });
+        const emailExist = await User.findOne({email: req.body.email});
+        if (emailExist) {
+            res.status(400).send("Email already exists.");
+            return;
+        }
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(req.body.password, salt);
 
-    try {
-        const {error} = await signUpValidator.validateAsync(req.body);
-        if (error) {
-            res.status(400).send(error.details[0].message);
-        } else {
+        const user = new User({
+            first_name: req.body.first_name,
+            last_name: req.body.last_name,
+            username: req.body.username,
+            email: req.body.email,
+            password: hashedPassword
+        });
+
+        try {
             const savedUser = await user.save();
             res.status(200).send("user created")
+        } catch (error) {
+            res.status(500).send(error);
         }
-    } catch (error) {
-        res.status(500).send(error);
-    }
-});
+    });
 
 // sign_in Route
 
