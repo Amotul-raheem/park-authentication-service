@@ -7,7 +7,7 @@ import joi from "joi";
 
 const authRouter = express.Router();
 
-const registerSchema = joi.object({
+const sign_upValidator = joi.object({
     first_name: joi.string().min(3).required(),
     last_name: joi.string().min(3).required(),
     username: joi.string().min(3).required(),
@@ -15,7 +15,7 @@ const registerSchema = joi.object({
     password: joi.string().min(6).required()
 });
 
-authRouter.post("/signup", async (req, res) => {
+authRouter.post("/sign_up", async (req, res) => {
     const emailExist = await User.findOne({email: req.body.email});
     if (emailExist) {
         res.status(400).send("Email already exists.");
@@ -33,7 +33,7 @@ authRouter.post("/signup", async (req, res) => {
     });
 
     try {
-        const {error} = await registerSchema.validateAsync(req.body);
+        const {error} = await sign_upValidator.validateAsync(req.body);
         if (error) {
             res.status(400).send(error.details[0].message);
         } else {
@@ -45,29 +45,29 @@ authRouter.post("/signup", async (req, res) => {
     }
 });
 
-// Login Route
+// sign_in Route
 
-const loginSchema = joi.object({
+const sign_inValidator = joi.object({
     username: joi.string().min(6).required(),
     email: joi.string().min(3).required().email(),
     password: joi.string().min(6).required()
 });
 
-authRouter.post("/signIn", async (req,res)=> {
-    const user = await User.findOne({email: req.body.email});
-    if (!user) return res.status(400).send("incorrect Email");
-
-    const validPassword = await bcrypt.compare(req.body.password, user.password);
-    if (!validPassword) return  res.status(400).send("Incorrect password");
-
-    try{
-        const {error} = await  loginSchema.validateAsync(req.body);
+authRouter.post("/sign_in", async (req,res)=> {
+        const {error} = await  sign_inValidator.validateAsync(req.body);
         if (error) return res.status(400).send(error.details[0].message);
         else {
+            const user = await User.findOne({email: req.body.email});
+            if (!user) return res.status(400).send("Incorrect Email");
+
+            const validPassword = await bcrypt.compare(req.body.password, user.password);
+            if (!validPassword) return  res.status(400).send("Incorrect password");
+        }
+
+        try {
             const token = jwt.sign({_id: user._id}, process.env.TOKEN_STRING);
             res.header("auth-token", token).send(token);
-        }
-    } catch (error) {
+        } catch (error) {
         res.status(500).send(error);
     }
 });
