@@ -45,7 +45,7 @@ authRouter.post("/sign-up", async (req, res) => {
         }
     });
 
-// sign_in Route
+// sign in Route
 
 const signInValidator = joi.object({
     username: joi.string().min(6).required(),
