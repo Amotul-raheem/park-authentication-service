@@ -48,7 +48,6 @@ authRouter.post("/sign-up", async (req, res) => {
 // sign in Route
 
 const signInValidator = joi.object({
-    // username: joi.string().min(6).required(),
     email: joi.string().min(3).required().email(),
     password: joi.string().min(6).required()
 });

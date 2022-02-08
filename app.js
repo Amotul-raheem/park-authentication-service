@@ -18,12 +18,13 @@ const PORT = process.env.PORT
 
 
 app.use("/users", authRouter);
-// app.post("/users/verify", (req,authVerify,req) => {
-//
-// })
 
+app.use("/testing", authVerify, function (req, res) {
+    console.log(req)
+    console.log("No middle ware")
+    res.send("this is fine")
+});
 
-
-app.listen(PORT, (req, res) => {
+app.listen(PORT, () => {
     console.log(`server is running on port ${PORT}`)
 });
