@@ -3,6 +3,7 @@ import bodyParser from "body-parser";
 import {authRouter} from "./routes/auth.js";
 import {mongodbConnection} from "./db.js";
 import dotenv from "dotenv"
+import authVerify from "./middleWare/authVerify.js";
 
 dotenv.config()
 
@@ -17,6 +18,10 @@ const PORT = process.env.PORT
 
 
 app.use("/users", authRouter);
+// app.post("/users/verify", (req,authVerify,req) => {
+//
+// })
+
 
 
 app.listen(PORT, (req, res) => {
