@@ -15,10 +15,8 @@ app.use(bodyParser.urlencoded({limit: "30mb", extended: true}));
 
 const PORT = process.env.PORT
 
-
 app.use("/users", authRouter);
 
-
-app.listen(PORT, (req, res) => {
+app.listen(PORT, () => {
     console.log(`server is running on port ${PORT}`)
 });
