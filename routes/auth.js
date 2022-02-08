@@ -8,8 +8,6 @@ import joi from "joi";
 const authRouter = express.Router();
 
 const signUpValidator = joi.object({
-    first_name: joi.string().min(3).required(),
-    last_name: joi.string().min(3).required(),
     username: joi.string().min(3).required(),
     email: joi.string().min(3).required().email(),
     password: joi.string().min(6).required()
@@ -30,8 +28,6 @@ authRouter.post("/sign-up", async (req, res) => {
         const hashedPassword = await bcrypt.hash(req.body.password, salt);
 
         const user = new User({
-            first_name: req.body.first_name,
-            last_name: req.body.last_name,
             username: req.body.username,
             email: req.body.email,
             password: hashedPassword
@@ -69,9 +65,6 @@ authRouter.post("/sign-in", async (req, res) => {
         const token = jwt.sign({_id: user._id}, process.env.TOKEN_STRING);
         res.header("auth-token", token)
         res.status(200).send("Login successfully")
-        res.json({
-            token
-        })
     } catch (error) {
         res.status(500).send(error);
     }
