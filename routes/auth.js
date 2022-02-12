@@ -69,25 +69,17 @@ authRouter.post("/sign-in", async (req, res) => {
         res.status(500).send(error);
     }
 });
-// sign out Route
-
-authRouter.get('/api/profile',auth,function (req,res){
-    res.json({
-        isAuth: true,
-        id: req.user._id,
-        email: req.user.email
-
-    })
+//sign-out
+authRouter.put("/api/logout", authToken, function (req, res) {
+    const authHeader = req.headers["authorization"];
+    jwt.sign(authHeader, "", { expiresIn: 1 } , (logout, err) => {
+        if (logout) {
+            res.send({msg : 'You have been Logged Out' });
+        } else {
+            res.send({msg:'Error'});
+        }
+    });
 });
 
 
-authRouter.get("/sign-out", auth,function(req,res) {
-        req.user.deleteToken(req.token,(err,user)=>{
-            if(err) {
-                return res.status(400).send(err);
-                res.sendStatus(200);
-            }
-        })
-
-})
-export {authRouter}
+export {authRouter};
