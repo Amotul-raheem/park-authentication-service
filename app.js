@@ -1,9 +1,9 @@
 import express from "express";
 import bodyParser from "body-parser";
-import {authenticationRouter} from "./routes/Authentication.js";
+import {authenticationRouter} from "./routes/AuthenticationRouter.js";
 import {mongodbConnection} from "./db.js";
 import dotenv from "dotenv";
-import {passwordRouter} from "./routes/ResetPassword.js"
+import {passwordRouter} from "./routes/PasswordRouter.js"
 
 dotenv.config()
 

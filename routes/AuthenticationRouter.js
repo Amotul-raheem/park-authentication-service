@@ -5,9 +5,9 @@ import joi from "joi";
 import User from "../models/User.js";
 
 
-
 const authenticationRouter = express.Router();
 
+// sign-up route
 const signUpValidator = joi.object({
     username: joi.string().min(3).required(),
     email: joi.string().min(3).required().email(),
@@ -25,7 +25,7 @@ authenticationRouter.post("/sign-up", async (req, res) => {
             res.status(400).send("Email already exists.");
             return;
         }
-        const salt = await bcrypt.genSalt(process.env.SALTROUNDS);
+        const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(req.body.password, salt);
 
         const user = new User({
@@ -43,8 +43,8 @@ authenticationRouter.post("/sign-up", async (req, res) => {
         }
     });
 
-// sign in Route
 
+// sign in route
 const signInValidator = joi.object({
     email: joi.string().min(3).required().email(),
     password: joi.string().min(6).required()
