@@ -11,10 +11,10 @@ const tokenSchema = new Schema({
         type: String,
         required: true,
     },
-    createdAt: {
+    expire_at: {
         type: Date,
         default: Date.now,
-        expires: 7200,
+        expires: 10,
     },
 });
 

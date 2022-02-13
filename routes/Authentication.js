@@ -6,7 +6,7 @@ import User from "../models/User.js";
 
 
 
-const authRouter = express.Router();
+const authenticationRouter = express.Router();
 
 const signUpValidator = joi.object({
     username: joi.string().min(3).required(),
@@ -14,7 +14,7 @@ const signUpValidator = joi.object({
     password: joi.string().min(6).required()
 });
 
-authRouter.post("/sign-up", async (req, res) => {
+authenticationRouter.post("/sign-up", async (req, res) => {
     const {error} = await signUpValidator.validateAsync(req.body);
     if (error) {
         res.status(400).send(error.details[0].message)
@@ -39,6 +39,7 @@ authRouter.post("/sign-up", async (req, res) => {
             res.status(200).send("user created")
         } catch (error) {
             res.status(500).send(error);
+            
         }
     });
 
@@ -49,7 +50,7 @@ const signInValidator = joi.object({
     password: joi.string().min(6).required()
 });
 
-authRouter.post("/sign-in", async (req, res) => {
+authenticationRouter.post("/sign-in", async (req, res) => {
     const {error} = await signInValidator.validateAsync(req.body);
     if (error) {
         return res.status(400).send(error.details[0].message)
@@ -71,4 +72,4 @@ authRouter.post("/sign-in", async (req, res) => {
     }
 });
 
-export {authRouter}
+export {authenticationRouter}
