@@ -1,8 +1,9 @@
 import express from "express"
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import User from "../models/User.js";
 import joi from "joi";
+import User from "../models/User.js";
+
 
 
 const authRouter = express.Router();
@@ -24,7 +25,7 @@ authRouter.post("/sign-up", async (req, res) => {
             res.status(400).send("Email already exists.");
             return;
         }
-        const salt = await bcrypt.genSalt(10);
+        const salt = await bcrypt.genSalt(process.env.SALTROUNDS);
         const hashedPassword = await bcrypt.hash(req.body.password, salt);
 
         const user = new User({

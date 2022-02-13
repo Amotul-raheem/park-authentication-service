@@ -16,8 +16,8 @@ app.use(bodyParser.urlencoded({limit: "30mb", extended: true}));
 
 const PORT = process.env.PORT
 
-app.use("/users", authRouter);
-app.use("/users", resetPasswordRouter)
+app.use("/api/users", authRouter);
+app.use("/api/password-reset", resetPasswordRouter)
 
 app.listen(PORT, () => {
     console.log(`server is running on port ${PORT}`)
