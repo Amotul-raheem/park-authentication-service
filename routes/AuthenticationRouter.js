@@ -1,19 +1,20 @@
 import express from "express"
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import User from "../models/User.js";
 import joi from "joi";
+import User from "../models/User.js";
 
 
-const authRouter = express.Router();
+const authenticationRouter = express.Router();
 
+// sign-up route
 const signUpValidator = joi.object({
     username: joi.string().min(3).required(),
     email: joi.string().min(3).required().email(),
     password: joi.string().min(6).required()
 });
 
-authRouter.post("/sign-up", async (req, res) => {
+authenticationRouter.post("/sign-up", async (req, res) => {
     const {error} = await signUpValidator.validateAsync(req.body);
     if (error) {
         res.status(400).send(error.details[0].message)
@@ -48,7 +49,7 @@ const signInValidator = joi.object({
     password: joi.string().min(6).required()
 });
 
-authRouter.post("/sign-in", async (req, res) => {
+authenticationRouter.post("/sign-in", async (req, res) => {
     const {error} = await signInValidator.validateAsync(req.body);
     if (error) {
         return res.status(400).send(error.details[0].message)
@@ -81,5 +82,4 @@ authRouter.put("/api/logout", authToken, function (req, res) {
     });
 });
 
-
-export {authRouter};
+export {authenticationRouter}
