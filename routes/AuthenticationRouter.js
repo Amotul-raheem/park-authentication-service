@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import joi from "joi";
 import User from "../models/User.js";
+import authVerify from "../middleWare/AuthVerify.js"
 
 
 const authenticationRouter = express.Router();
@@ -63,23 +64,12 @@ authenticationRouter.post("/sign-in", async (req, res) => {
 
 
     try {
-        const token = jwt.sign({_id: user._id}, process.env.TOKEN_STRING);
+        const token = jwt.sign({_id: user._id}, process.env.TOKEN_STRING, {expiresIn: '1h'});
         res.header("auth-token", token)
         res.status(200).send("Login successfully")
     } catch (error) {
         res.status(500).send(error);
     }
-});
-//sign-out
-authRouter.put("/api/logout", authToken, function (req, res) {
-    const authHeader = req.headers["authorization"];
-    jwt.sign(authHeader, "", { expiresIn: 1 } , (logout, err) => {
-        if (logout) {
-            res.send({msg : 'You have been Logged Out' });
-        } else {
-            res.send({msg:'Error'});
-        }
-    });
 });
 
 export {authenticationRouter}
