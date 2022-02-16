@@ -4,6 +4,7 @@ import {authenticationRouter} from "./routes/AuthenticationRouter.js";
 import {mongodbConnection} from "./db.js";
 import dotenv from "dotenv";
 import {passwordRouter} from "./routes/PasswordRouter.js"
+import authVerify from "./middleWare/AuthVerify.js"
 
 dotenv.config()
 

@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import joi from "joi";
 import User from "../models/User.js";
+import authVerify from "../middleWare/AuthVerify.js"
 
 
 const authenticationRouter = express.Router();
@@ -39,12 +40,11 @@ authenticationRouter.post("/sign-up", async (req, res) => {
             res.status(200).send("user created")
         } catch (error) {
             res.status(500).send(error);
-            
         }
     });
 
+// sign in Route
 
-// sign in route
 const signInValidator = joi.object({
     email: joi.string().min(3).required().email(),
     password: joi.string().min(6).required()
@@ -64,7 +64,7 @@ authenticationRouter.post("/sign-in", async (req, res) => {
 
 
     try {
-        const token = jwt.sign({_id: user._id}, process.env.TOKEN_STRING);
+        const token = jwt.sign({_id: user._id}, process.env.TOKEN_STRING, {expiresIn: '1h'});
         res.header("auth-token", token)
         res.status(200).send("Login successfully")
     } catch (error) {
