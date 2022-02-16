@@ -17,11 +17,6 @@ app.use(bodyParser.urlencoded({limit: "30mb", extended: true}));
 
 const PORT = process.env.PORT
 
-app.post("/testing", authVerify, function (req,res) {
-    res.send("I'm working")
-    console.log("testing")
-})
-
 app.use("/api", authenticationRouter);
 app.use("/api", passwordRouter)
 
