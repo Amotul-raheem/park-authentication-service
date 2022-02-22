@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import joi from "joi";
 import {v4 as uuidv4} from 'uuid';
 import User from "../models/User.js";
+import {sendResetPasswordEmail} from "../clients/ParkNotificationServiceClient.js";
 
 
 const passwordRouter = express.Router();
@@ -30,9 +31,8 @@ passwordRouter.post("/forgot-password", async (req, res) => {
         await user.save()
 
         const link = `${process.env.BASE_URL}/reset-password/${resetToken}`;
-        //TODO send an email to user
+        sendResetPasswordEmail(link, user.email, user.username)
         res.status(200).send("Password reset link sent to your email");
-        console.log(link)
     } catch (error) {
         res.status(500).send(error);
     }
