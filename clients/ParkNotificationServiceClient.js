@@ -8,10 +8,10 @@ export const sendEmail = (link, email, username, endpoint, emailType) => {
         username: username,
         link: link
     })
-        .then(res => {
+        .then(() => {
             console.log(emailType + " Email Sent Successfully for " + username)
         })
-        .catch(error => {
+        .catch(() => {
             throw new Error("Unable to send out " + emailType + " email")
         })
 }
