@@ -2,16 +2,16 @@
 import axios from "axios";
 
 
-export const sendEmail = (Link, email, username, URL) => {
-    axios.post(URL, {
+export const sendEmail = (link, email, username, endpoint, emailType) => {
+    axios.post(endPoint, {
         email: email,
         username: username,
-        Link: Link
+        link: link
     })
         .then(res => {
-            console.log("Email Sent Successfully for " + username)
+            console.log(emailType + "Email Sent Successfully for " + username)
         })
         .catch(error => {
-            throw new Error("Unable to send out reset password email")
+            throw new Error("Unable to send out email")
         })
 }

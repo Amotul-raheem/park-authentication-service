@@ -5,12 +5,10 @@ import dotenv from "dotenv";
 import {v4 as uuidv4} from 'uuid';
 import User from "../models/User.js";
 import {sendEmail} from "../clients/ParkNotificationServiceClient.js";
-import isTokenExpired from "../Utilities/TokenExpiration.js"
+import isTokenExpired from "../Utils/TokenUtils.js"
 
 dotenv.config()
 const passwordRouter = express.Router();
-
-
 
 //forgot-password route
 const emailValidator = joi.object({
@@ -43,7 +41,7 @@ passwordRouter.post("/forgot-password", async (req, res) => {
         const RESET_PASSWORD_URL = process.env.RESET_PASSWORD_URL
 
         //Sends reset password link using axios
-        sendEmail(link, user.email, user.username, RESET_PASSWORD_URL)
+        sendEmail(link, user.email, user.username, RESET_PASSWORD_URL, "Reset password")
 
         res.status(200).send("Password reset link sent to your email");
     } catch (error) {

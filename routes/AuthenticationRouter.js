@@ -7,7 +7,7 @@ import {v4 as uuidv4} from 'uuid';
 import User from "../models/User.js";
 import authVerify from "../middleWare/AuthVerify.js"
 import {sendEmail} from "../clients/ParkNotificationServiceClient.js";
-import isTokenExpired from "../Utilities/TokenExpiration.js"
+import isTokenExpired from "../Utils/TokenUtils.js"
 
 dotenv.config()
 const authenticationRouter = express.Router();
@@ -47,7 +47,7 @@ authenticationRouter.post("/sign-up", async (req, res) => {
         const VERIFY_EMAIL_URL = process.env.VERIFY_EMAIL_URL
 
         // Send email verification to user in notification service
-        sendEmail(link, req.body.email, req.body.username, VERIFY_EMAIL_URL)
+        sendEmail(link, req.body.email, req.body.username, VERIFY_EMAIL_URL, "Account verification")
         
         const savedUser = await user.save();
         res.status(200).send("user created")
