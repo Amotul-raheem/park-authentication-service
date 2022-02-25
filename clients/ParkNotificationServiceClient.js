@@ -3,7 +3,7 @@ import axios from "axios";
 
 
 export const sendEmail = (link, email, username, endpoint, emailType) => {
-    axios.post(endPoint, {
+    axios.post(endpoint, {
         email: email,
         username: username,
         link: link
