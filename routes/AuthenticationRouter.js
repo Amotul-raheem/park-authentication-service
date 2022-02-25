@@ -44,6 +44,7 @@ authenticationRouter.post("/sign-up", async (req, res) => {
         });
 
         const link = `${process.env.BASE_URL}/verify-email/${verificationToken}`;
+        console.log(link)
         const VERIFY_EMAIL_URL = process.env.VERIFY_EMAIL_URL
 
         // Send email verification to user in notification service
