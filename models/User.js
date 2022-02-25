@@ -23,6 +23,16 @@ const userSchema = new Schema({
         type: Date,
         required: false
     },
+    verification_token: {
+        type: String,
+    },
+    verification_token_creation_date: {
+        type: Date
+    },
+    isVerified: {
+        type: Boolean,
+        default: false
+    },
     card: {
         card_number: {
             type: Number,
