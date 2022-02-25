@@ -9,9 +9,9 @@ export const sendEmail = (link, email, username, endpoint, emailType) => {
         link: link
     })
         .then(res => {
-            console.log(emailType + "Email Sent Successfully for " + username)
+            console.log(emailType + " Email Sent Successfully for " + username)
         })
         .catch(error => {
-            throw new Error("Unable to send out " + emailType + "email")
+            throw new Error("Unable to send out " + emailType + " email")
         })
 }
