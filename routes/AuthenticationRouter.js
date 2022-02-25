@@ -5,9 +5,8 @@ import joi from "joi";
 import dotenv from "dotenv";
 import {v4 as uuidv4} from 'uuid';
 import User from "../models/User.js";
-import authVerify from "../middleWare/AuthVerify.js"
 import {sendEmail} from "../clients/ParkNotificationServiceClient.js";
-import isTokenExpired from "../Utils/TokenUtils.js"
+import {isTokenExpired} from "../utils/TokenUtils.js"
 
 dotenv.config()
 const authenticationRouter = express.Router();
