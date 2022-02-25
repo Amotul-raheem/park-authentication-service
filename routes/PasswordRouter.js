@@ -1,11 +1,13 @@
 import express from "express"
 import bcrypt from "bcryptjs";
 import joi from "joi";
+import dotenv from "dotenv";
 import {v4 as uuidv4} from 'uuid';
 import User from "../models/User.js";
-import {sendResetPasswordEmail} from "../clients/ParkNotificationServiceClient.js";
+import {sendEmail} from "../clients/ParkNotificationServiceClient.js";
+import {isTokenExpired} from "../utils/TokenUtils.js"
 
-
+dotenv.config()
 const passwordRouter = express.Router();
 
 //forgot-password route
@@ -36,9 +38,10 @@ passwordRouter.post("/forgot-password", async (req, res) => {
         await user.save()
 
         const link = `${process.env.BASE_URL}/reset-password/${resetToken}`;
+        const RESET_PASSWORD_URL = process.env.RESET_PASSWORD_URL
 
         //Sends reset password link using axios
-        sendResetPasswordEmail(link, user.email, user.username)
+        sendEmail(link, user.email, user.username, RESET_PASSWORD_URL, "Reset password")
 
         res.status(200).send("Password reset link sent to your email");
     } catch (error) {
@@ -84,11 +87,6 @@ passwordRouter.post("/reset-password/:resetToken", async (req, res) => {
     }
 });
 
-const isTokenExpired = (restTokenCreationDate) => {
-    const now = Date.now();
-    const diff = (now - restTokenCreationDate) / 1000;
 
-    return diff > process.env.RESET_TOKEN_EXPIRATION;
-}
 
 export {passwordRouter}
