@@ -22,7 +22,7 @@ authenticationRouter.post("/sign-up", async (req, res) => {
     try {
     const {error} = await signUpValidator.validateAsync(req.body);
     if (error) {
-        res.status(400).send(error.details[0].message)
+        res.status(500).send(error.details[0].message)
     }
         const emailExist = await User.findOne({email: req.body.email});
         if (emailExist) {
@@ -48,11 +48,8 @@ authenticationRouter.post("/sign-up", async (req, res) => {
 
         // Send email verification to user in notification service
         sendEmail(link, req.body.email, req.body.username, VERIFY_EMAIL_URL, "Account verification")
-        
-        const savedUser = await user.save();
+        await user.save();
         res.status(200).send("user created")
-
-         
         } catch (error) {
             res.status(500).send(error);
         }
