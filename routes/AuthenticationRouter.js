@@ -80,17 +80,13 @@ authenticationRouter.post("/sign-in", async (req, res) => {
     if (!validPassword) return res.status(400).send("Incorrect password");
 
     try {
-        if (!user.isVerified && !isTokenExpired(user.verification_token_creation_date)) {
+        if ((!user.isVerified && !isTokenExpired(user.verification_token_creation_date)) || user.isVerified) {
             const token = jwt.sign({_id: user._id}, process.env.TOKEN_STRING, {expiresIn: '1h'});
             res.header("auth-token", token)
             res.status(200).send("Login successfully")
         } else {
             return res.status(401).send('Your Email has not been verified. Check your mail');
         }
-
-        const token = jwt.sign({_id: user._id}, process.env.TOKEN_STRING, {expiresIn: '1h'});
-        res.header("auth-token", token)
-        res.status(200).send("Login successfully")
 
     } catch (error) {
         res.status(500).send(error);
