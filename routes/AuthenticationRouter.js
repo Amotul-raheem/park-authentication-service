@@ -42,7 +42,7 @@ authenticationRouter.post("/sign-up", async (req, res) => {
             verification_token_creation_date: Date.now()
         });
 
-        const link = `${process.env.BASE_URL}/verify-email/${verificationToken}`;
+        const link = `${process.env.BASE_URL}/account-verification-successful/${verificationToken}`;
         console.log(link)
         const ACCOUNT_VERIFICATION_NOTIFICATION_ENDPOINT = process.env.ACCOUNT_VERIFICATION_NOTIFICATION_ENDPOINT
 
@@ -80,26 +80,25 @@ authenticationRouter.post("/sign-in", async (req, res) => {
     if (!validPassword) return res.status(400).send("Incorrect password");
 
     try {
-        if (!user.isVerified) {
-            if (!isTokenExpired(user.verification_token_creation_date)) {
-                const token = jwt.sign({_id: user._id}, process.env.TOKEN_STRING, {expiresIn: '1h'});
-                res.header("auth-token", token)
-                res.status(200).send("Login successfully")
-            } else {
-                    return res.status(401).send('Your Email has not been verified. Check your mail');
-            }
-        }else {
+        if (!user.isVerified && !isTokenExpired(user.verification_token_creation_date)) {
             const token = jwt.sign({_id: user._id}, process.env.TOKEN_STRING, {expiresIn: '1h'});
             res.header("auth-token", token)
             res.status(200).send("Login successfully")
+        } else {
+            return res.status(401).send('Your Email has not been verified. Check your mail');
         }
+
+        const token = jwt.sign({_id: user._id}, process.env.TOKEN_STRING, {expiresIn: '1h'});
+        res.header("auth-token", token)
+        res.status(200).send("Login successfully")
+
     } catch (error) {
         res.status(500).send(error);
     }
 });
 
 // Email verification route
-authenticationRouter.post("/verify-email/:verification_token", async (req, res) => {
+authenticationRouter.post("/account-verification-successful/:verification_token", async (req, res) => {
     try {
         //Checks if user's token exists in database
         const user = await User.findOne({verification_token: req.params.verification_token});
