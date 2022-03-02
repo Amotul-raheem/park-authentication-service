@@ -86,7 +86,7 @@ authenticationRouter.post("/sign-in", async (req, res) => {
                 res.header("auth-token", token)
                 res.status(200).send("Login successfully")
             } else {
-                return res.status(401).send('Your Email has not been verified. Check your mail');
+                    return res.status(401).send('Your Email has not been verified. Check your mail');
             }
         }
     } catch (error) {
