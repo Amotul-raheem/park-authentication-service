@@ -44,12 +44,12 @@ authenticationRouter.post("/sign-up", async (req, res) => {
 
         const link = `${process.env.BASE_URL}/verify-email/${verificationToken}`;
         console.log(link)
-        const VERIFY_EMAIL_URL = process.env.VERIFY_EMAIL_URL
+        const ACCOUNT_VERIFICATION_NOTIFICATION_ENDPOINT = process.env.ACCOUNT_VERIFICATION_NOTIFICATION_ENDPOINT
 
 
         // Send email verification to user in notification service
         const username = req.body.username
-        await sendEmail(link, req.body.email, username, VERIFY_EMAIL_URL)
+        await sendEmail(link, req.body.email, username, ACCOUNT_VERIFICATION_NOTIFICATION_ENDPOINT)
         console.log("Account verification email successfully sent to " + username)
 
         // Save user to database
@@ -88,6 +88,10 @@ authenticationRouter.post("/sign-in", async (req, res) => {
             } else {
                     return res.status(401).send('Your Email has not been verified. Check your mail');
             }
+        }else {
+            const token = jwt.sign({_id: user._id}, process.env.TOKEN_STRING, {expiresIn: '1h'});
+            res.header("auth-token", token)
+            res.status(200).send("Login successfully")
         }
     } catch (error) {
         res.status(500).send(error);
