@@ -42,19 +42,20 @@ authenticationRouter.post("/sign-up", async (req, res) => {
             verification_token_creation_date: Date.now()
         });
 
-        const link = `${process.env.BASE_URL}/account-verification-successful/${verificationToken}`;
+        const link = `${process.env.BASE_URL}/account-verification/${verificationToken}`;
         console.log(link)
         const ACCOUNT_VERIFICATION_NOTIFICATION_ENDPOINT = process.env.ACCOUNT_VERIFICATION_NOTIFICATION_ENDPOINT
-
 
         // Send email verification to user in notification service
         const username = req.body.username
         await sendEmail(link, req.body.email, username, ACCOUNT_VERIFICATION_NOTIFICATION_ENDPOINT)
+
         console.log("Account verification email successfully sent to " + username)
 
         // Save user to database
         await user.save();
         res.status(200).send("user created")
+
     } catch (error) {
         res.status(500).send(error);
     }
@@ -83,6 +84,7 @@ authenticationRouter.post("/sign-in", async (req, res) => {
         if ((!user.isVerified && !isTokenExpired(user.verification_token_creation_date)) || user.isVerified) {
             const token = jwt.sign({_id: user._id}, process.env.TOKEN_STRING, {expiresIn: '1h'});
             res.header("auth-token", token)
+            res.header('Access-Control-Expose-Headers', 'auth-token')
             res.status(200).send("Login successfully")
         } else {
             return res.status(401).send('Your Email has not been verified. Check your mail');
@@ -94,10 +96,10 @@ authenticationRouter.post("/sign-in", async (req, res) => {
 });
 
 // Email verification route
-authenticationRouter.post("/account-verification-successful/:verification_token", async (req, res) => {
+authenticationRouter.post("/verify-email/:verificationToken", async (req, res) => {
     try {
         //Checks if user's token exists in database
-        const user = await User.findOne({verification_token: req.params.verification_token});
+        const user = await User.findOne({verification_token: req.params.verificationToken});
         if (!user) return res.status(400).send("Invalid Token");
 
         //Checks if token has expired

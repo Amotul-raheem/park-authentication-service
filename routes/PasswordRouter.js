@@ -32,16 +32,16 @@ passwordRouter.post("/forgot-password", async (req, res) => {
         //Generates a random token that is unique to te user.
         const resetToken = uuidv4();
 
-        //Adds neww fields to the userSchema; reset-token and reset-token creation date
+        //Adds new fields to the userSchema; reset-token and reset-token creation date
         user.reset_token = resetToken
         user.reset_token_creation_date = Date.now();
         await user.save()
 
         const link = `${process.env.BASE_URL}/reset-password/${resetToken}`;
-        const RESET_PASSWORD_URL = process.env.RESET_PASSWORD_URL
+        const RESET_PASSWORD_NOTIFICATION_ENDPOINT = process.env.RESET_PASSWORD_NOTIFICATION_ENDPOINT
 
         //Sends reset password link using axios
-        await sendEmail(link, user.email, user.username, RESET_PASSWORD_URL)
+        await sendEmail(link, user.email, user.username, RESET_PASSWORD_NOTIFICATION_ENDPOINT )
         console.log("Reset password email sent successfully to " + user.username)
         res.status(200).send("Password reset link sent to your email");
     } catch (error) {
