@@ -1,17 +1,11 @@
-
 import axios from "axios";
 
-
-export const sendEmail = (link, email, username, endpoint, emailType) => {
-    axios.post(endpoint, {
+const sendEmail = async (link, email, username, endpoint) => {
+    await axios.post(endpoint, {
         email: email,
         username: username,
         link: link
     })
-        .then(() => {
-            console.log(emailType + " Email Sent Successfully for " + username)
-        })
-        .catch(() => {
-            throw new Error("Unable to send out " + emailType + " email")
-        })
+
 }
+export default sendEmail

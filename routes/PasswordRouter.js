@@ -4,8 +4,8 @@ import joi from "joi";
 import dotenv from "dotenv";
 import {v4 as uuidv4} from 'uuid';
 import User from "../models/User.js";
-import {sendEmail} from "../clients/ParkNotificationServiceClient.js";
 import {isTokenExpired} from "../utils/TokenUtils.js"
+import sendEmail from "../clients/ParkNotificationServiceClient.js";
 
 dotenv.config()
 const passwordRouter = express.Router();
@@ -32,17 +32,17 @@ passwordRouter.post("/forgot-password", async (req, res) => {
         //Generates a random token that is unique to te user.
         const resetToken = uuidv4();
 
-        //Adds neww fields to the userSchema; reset-token and reset-token creation date
+        //Adds new fields to the userSchema; reset-token and reset-token creation date
         user.reset_token = resetToken
         user.reset_token_creation_date = Date.now();
         await user.save()
 
         const link = `${process.env.BASE_URL}/reset-password/${resetToken}`;
-        const RESET_PASSWORD_URL = process.env.RESET_PASSWORD_URL
+        const RESET_PASSWORD_NOTIFICATION_ENDPOINT = process.env.RESET_PASSWORD_NOTIFICATION_ENDPOINT
 
         //Sends reset password link using axios
-        sendEmail(link, user.email, user.username, RESET_PASSWORD_URL, "Reset password")
-
+        await sendEmail(link, user.email, user.username, RESET_PASSWORD_NOTIFICATION_ENDPOINT )
+        console.log("Reset password email sent successfully to " + user.username)
         res.status(200).send("Password reset link sent to your email");
     } catch (error) {
         res.status(500).send(error);
@@ -86,7 +86,6 @@ passwordRouter.post("/reset-password/:resetToken", async (req, res) => {
         res.status(500).send(error);
     }
 });
-
 
 
 export {passwordRouter}
