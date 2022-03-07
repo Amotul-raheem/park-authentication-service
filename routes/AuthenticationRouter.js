@@ -83,8 +83,7 @@ authenticationRouter.post("/sign-in", async (req, res) => {
     try {
         if ((!user.isVerified && !isTokenExpired(user.verification_token_creation_date)) || user.isVerified) {
             const token = jwt.sign({_id: user._id}, process.env.TOKEN_STRING, {expiresIn: '1h'});
-            res.header("auth-token", token)
-            res.header('Access-Control-Expose-Headers', 'auth-token')
+            res.header('Access-Control-Expose-Headers', 'token').header("token", token)
             res.status(200).send("Login successfully")
         } else {
             return res.status(401).send('Your Email has not been verified. Check your mail');
