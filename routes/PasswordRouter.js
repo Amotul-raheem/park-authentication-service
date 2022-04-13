@@ -28,7 +28,6 @@ passwordRouter.post("/forgot-password", async (req, res) => {
         if (!user) {
             res.status(400).send("Incorrect Email");
         }
-
         //Generates a random token that is unique to te user.
         const resetToken = uuidv4();
 
@@ -86,6 +85,11 @@ passwordRouter.post("/reset-password/:resetToken", async (req, res) => {
         res.status(500).send(error);
     }
 });
+
+passwordRouter.post("/resend-reset-password", async(req,res)=>{
+
+})
+
 
 
 export {passwordRouter}

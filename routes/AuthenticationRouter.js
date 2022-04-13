@@ -73,7 +73,6 @@ authenticationRouter.post("/sign-in", async (req, res) => {
     if (error) {
         return res.status(400).send(error.details[0].message)
     }
-
     const user = await User.findOne({email: req.body.email});
     if (!user) return res.status(400).send("Incorrect Email");
 
@@ -82,7 +81,7 @@ authenticationRouter.post("/sign-in", async (req, res) => {
 
     try {
         if ((!user.isVerified && !isTokenExpired(user.verification_token_creation_date)) || user.isVerified) {
-            const token = jwt.sign({_id: user._id}, process.env.TOKEN_STRING, {expiresIn: '1h'});
+            const token = jwt.sign({_id: user._id}, process.env.TOKEN_STRING, {expiresIn: '48h'});
             res.header('Access-Control-Expose-Headers', 'token').header("token", token)
             res.status(200).send("Login successfully")
         } else {
