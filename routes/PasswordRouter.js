@@ -86,9 +86,7 @@ passwordRouter.post("/reset-password/:resetToken", async (req, res) => {
     }
 });
 
-passwordRouter.post("/resend-reset-password", async(req,res)=>{
 
-})
 
 
 
